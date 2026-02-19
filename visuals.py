@@ -1,13 +1,26 @@
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
-from scipy.interpolate import interp2d # <-- Corregido de 'spicy' a 'scipy'
+from scipy.interpolate import RegularGridInterpolator # <-- Nueva función estándar
 
 def plot_3d_thermal_lidar(X, Y, Z, temp_grid):
-    """Superficie 3D con color basado en temperatura."""
-    # Suavizamos el grid de 10x10 para que coincida con el mapa de 50x50
-    f = interp2d(np.linspace(0, 100, 10), np.linspace(0, 100, 10), temp_grid, kind='linear')
-    temp_resampled = f(np.linspace(0, 100, 50), np.linspace(0, 100, 50))
+    """Superficie 3D con color basado en temperatura usando RegularGridInterpolator."""
+    
+    # Configuramos los ejes del grid original (10x10)
+    x_orig = np.linspace(0, 100, 10)
+    y_orig = np.linspace(0, 100, 10)
+    
+    # Creamos el interpolador moderno
+    interp = RegularGridInterpolator((x_orig, y_orig), temp_grid, method='linear')
+    
+    # Creamos los puntos donde queremos calcular la temperatura (el mapa 50x50 del LiDAR)
+    x_new = np.linspace(0, 100, 50)
+    y_new = np.linspace(0, 100, 50)
+    X_new, Y_new = np.meshgrid(x_new, y_new)
+    
+    # Aplicamos la interpolación
+    pts = np.array([X_new.ravel(), Y_new.ravel()]).T
+    temp_resampled = interp(pts).reshape(50, 50)
 
     fig = go.Figure(data=[go.Surface(
         z=Z, x=X, y=Y, 
