@@ -45,3 +45,40 @@ try:
 
 except Exception as e:
     st.error(f"Error: {e}")
+    
+# ... (imports anteriores)
+from logic import get_dispatch_strategy
+from visuals import plot_strategy_grid
+
+# ... (dentro del bloque principal de app.py)
+
+# 1. Calculamos la estrategia primero
+# Nota: Para Z_grid necesitamos promediar el Z del LiDAR (50x50) a 10x10
+Z_grid = Z.reshape(10, 5, 10, 5).mean(axis=(1, 3)) 
+estrategia = get_dispatch_strategy(grid_temp, grid_hum, Z_grid)
+
+# 2. Agregamos la pestaña
+tab1, tab2, tab3, tab4 = st.tabs(["🗺️ Sectores", "🏔️ 3D Térmico", "📈 Tendencias", "🚛 Estrategia de Salida"])
+
+with tab4:
+    st.subheader("Planificación de Despacho Sugerida")
+    col_a, col_b = st.columns([2, 1])
+    
+    with col_a:
+        st.plotly_chart(plot_strategy_grid(estrategia), use_container_width=True)
+    
+    with col_b:
+        st.write("📋 **Sectores con Criterio de Salida:**")
+        # Listamos los sectores que cumplen el criterio para el usuario
+        for r in range(10):
+            for c in range(10):
+                if estrategia[r, c] != "ALMACENAR":
+                    st.warning(f"Sector [{r+1}, {c+1}]: {estrategia[r, c]}")
+
+    st.info("""
+    **Criterios de Salida:**
+    1. **Temperatura > 25°C:** Riesgo de degradación de harina.
+    2. **Humedad > 50%:** Riesgo de apelmazamiento.
+    3. **Altura > 10m:** Rotación de inventario por volumen acumulado.
+    """)
+
