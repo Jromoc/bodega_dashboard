@@ -66,3 +66,23 @@ def plot_comparative_trends(df_dia):
     fig.update_yaxes(title_text="Temperatura °C", secondary_y=False)
     fig.update_yaxes(title_text="Humedad %", secondary_y=True)
     return fig
+
+def plot_strategy_grid(strategy_map):
+    # Convertimos categorías a números para el Heatmap
+    # 0: Almacenar (Verde), 1: Despacho (Amarillo), 2: Salida Urgente (Rojo)
+    numeric_map = np.zeros(strategy_map.shape)
+    for r in range(strategy_map.shape[0]):
+        for c in range(strategy_map.shape[1]):
+            if "SALIDA" in strategy_map[r, c]: numeric_map[r, c] = 2
+            elif "DESPACHO" in strategy_map[r, c]: numeric_map[r, c] = 1
+            else: numeric_map[r, c] = 0
+
+    fig = go.Figure(data=go.Heatmap(
+        z=numeric_map,
+        text=strategy_map, # Texto que aparece al pasar el mouse
+        texttemplate="%{text}",
+        colorscale=[[0, 'green'], [0.5, 'yellow'], [1, 'red']],
+        showscale=False
+    ))
+    fig.update_layout(title="Mapa de Estrategia de Salida (Sectores)", xaxis_title="Eje X", yaxis_title="Eje Y")
+    return fig
