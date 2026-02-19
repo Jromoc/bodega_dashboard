@@ -1,23 +1,17 @@
 import plotly.graph_objects as go
-import numpy as np
+from plotly.subplots import make_subplots
 
-def plot_2d_heatmap(data, title):
-    fig = go.Figure(data=go.Heatmap(
-        z=data,
-        x=np.linspace(0, 100, 10),
-        y=np.linspace(0, 100, 10),
-        colorscale='Viridis'
-    ))
-    fig.update_layout(title=title, xaxis_title="Metros", yaxis_title="Metros")
-    return fig
-
-def plot_3d_lidar(X, Y, Z):
-    fig = go.Figure(data=[go.Surface(z=Z, x=X, y=Y, colorscale='YlOrBr')])
-    fig.update_layout(
-        scene=dict(
-            zaxis=dict(range=[0, 15], title="Altura (m)"),
-            aspectratio=dict(x=1, y=1, z=0.4)
-        ),
-        margin=dict(l=0, r=0, b=0, t=0)
-    )
+def plot_comparative_trends(df_filtrado):
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    
+    # Temperatura
+    fig.add_trace(go.Scatter(x=df_filtrado['Fecha_Hora'], y=df_filtrado['Temp_Ext'], name="Temp Ext (MTY)"), secondary_y=False)
+    fig.add_trace(go.Scatter(x=df_filtrado['Fecha_Hora'], y=df_filtrado['Temp_Int'], name="Temp Int (Bodega)"), secondary_y=False)
+    
+    # Humedad
+    fig.add_trace(go.Scatter(x=df_filtrado['Fecha_Hora'], y=df_filtrado['Hum_Int'], name="Hum Int (%)", line=dict(dash='dash')), secondary_y=True)
+    
+    fig.update_layout(title="Análisis Térmico e Higrométrico", hovermode="x unified")
+    fig.update_yaxes(title_text="Temperatura °C", secondary_y=False)
+    fig.update_yaxes(title_text="Humedad %", secondary_y=True)
     return fig
