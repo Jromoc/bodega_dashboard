@@ -1,35 +1,37 @@
-# app.py
 import streamlit as st
-import logic
-import visuals
 import simulation
+import visuals
+import logic # ¡Aquí está el ingrediente secreto que faltaba!
+import robotics
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="Smart Grain Storage")
 st.title("🌾 Smart Grain Storage - Dashboard de Control")
 
-# --- CÓDIGO CORREGIDO ---
-
-# Verifica si 'data' ya existe en la memoria de la sesión
+# --- 1. INICIALIZACIÓN SEGURA ---
 if 'data' not in st.session_state:
-    # Si no existe, entonces (y solo entonces) ejecuta la simulación
     st.session_state['data'] = simulation.obtener_datos_sensores()
 
-# A partir de aquí, el resto de tu código usa st.session_state.data sin problemas
-
+# --- 2. LAYOUT ---
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    fig = visuals.crear_mapa_calor(st.session_state.data)
+    # Usamos la sintaxis ['data'] para evitar errores
+    fig = visuals.crear_mapa_calor(st.session_state['data'])
     st.plotly_chart(fig, use_container_width=True)
 
 with col2:
-    st.subheader("Control de Robots")
-    if st.button("Calcular Rutas"):
-        # Esto ahora llama a la lógica que usa robotics.py
-        instrucciones = logic.generar_estrategia(st.session_state.data)
+    st.subheader("Panel de Control")
+    
+    # BOTÓN 1: Estrategia Lógica
+    if st.button("Generar Estrategia"):
+        # Aquí es donde usamos el import logic que faltaba
+        instrucciones = logic.generar_estrategia(st.session_state['data']['temperatura'])
         for instr in instrucciones:
-            st.code(instr) # Mostramos la ruta como código
+            st.success(instr)
             
+    # BOTÓN 2: Actualizar
     if st.button("Actualizar Sensores"):
-        st.session_state.data = simulation.obtener_datos_sensores()
+        st.session_state['data'] = simulation.obtener_datos_sensores()
         st.rerun()
+
+    st.info("Nota: El sistema utiliza lógica modular para reconfiguración de carga.")
