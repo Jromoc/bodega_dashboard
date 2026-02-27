@@ -1,4 +1,6 @@
-# 🚀 Smart Grain Storage: 3D Monitoring & Autonomous Logistics (MVP)
+# 🚀 Smart Grain Storage: 3D Monitoring & Autonomous Logistics
+
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge&logo=streamlit)](https://bodegadashboard-hej2buxvjub3nn2mfrdwp8.streamlit.app/)
 
 Este proyecto representa una solución de **Bodega 4.0** diseñada para la gestión automatizada de almacenamiento de granos y harinas en instalaciones de gran escala (**100m x 100m**). El sistema integra monitoreo térmico, humedad y relieve **LiDAR** para ejecutar estrategias de extracción inteligente mediante robots terrestres.
 
