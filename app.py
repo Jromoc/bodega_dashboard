@@ -12,7 +12,7 @@ st.title("🌾 Smart Grain Storage - Dashboard de Control")
 # Verifica si 'data' ya existe en la memoria de la sesión
 if 'data' not in st.session_state:
     # Si no existe, entonces (y solo entonces) ejecuta la simulación
-    st.session_state.data = simulation.obtener_datos_sensores()
+    st.session_state['data'] = simulation.obtener_datos_sensores()
 
 # A partir de aquí, el resto de tu código usa st.session_state.data sin problemas
 
