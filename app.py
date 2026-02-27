@@ -7,6 +7,7 @@ import simulation
 st.set_page_config(layout="wide")
 st.title("🌾 Smart Grain Storage - Dashboard de Control")
 
+# CÓDIGO CORRECTO
 if 'data' not in st.session_state:
     st.session_state.data = simulation.obtener_datos_sensores()
 
