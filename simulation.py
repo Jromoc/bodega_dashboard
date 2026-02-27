@@ -14,8 +14,9 @@ def obtener_datos_sensores():
     return data
 
 def simular_paso_tiempo(data):
-    """Aumenta la temperatura en zonas críticas para simular degradación."""
-    # Incrementa temperatura en 0.5°C si supera el umbral
+    """Incrementa la temperatura en zonas críticas (mayor a 25°) para simular degradación."""
+    # Creamos una máscara lógica donde la temperatura sea mayor al umbral
     mask = data["temperatura"] > config.UMBRAL_TEMP_CRITICA
+    # Incrementamos en 0.5 grados donde la condición se cumpla
     data["temperatura"] += mask * 0.5
     return data
