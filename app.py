@@ -5,11 +5,17 @@ import logic # ¡Aquí está el ingrediente secreto que faltaba!
 import robotics
 
 st.set_page_config(layout="wide", page_title="Smart Grain Storage")
-st.title("🌾 Smart Grain Storage - Dashboard de Control")
+# 1. Configuración de página (debe ser el primer comando de Streamlit)
+st.set_page_config(layout="wide", page_title="Smart Grain Storage")
 
-# --- 1. INICIALIZACIÓN SEGURA ---
+# 2. INICIALIZACIÓN SEGURA (Copia esto tal cual)
+# Esto verifica si la llave 'data' existe. Si no, la crea.
+# Si ya existe, NO hace nada (evitando el error).
 if 'data' not in st.session_state:
     st.session_state['data'] = simulation.obtener_datos_sensores()
+
+# A partir de aquí, el resto de tu app usa st.session_state['data']
+st.title("🌾 Smart Grain Storage - Dashboard de Control")
 
 # --- 2. LAYOUT ---
 col1, col2 = st.columns([2, 1])
